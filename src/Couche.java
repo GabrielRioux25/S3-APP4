@@ -20,9 +20,10 @@ public abstract class Couche {
 
     protected abstract void receiveFromUp(byte[] PDU);
 
-    protected abstract void receiveFromDown(byte[] PDU);
+    protected abstract void receiveFromDown(byte[] PDU) throws ErreurTransmissionExeption;
 
-    protected void passUp(byte[] PDU){
+    //pour le modele chaine de responsabilités
+    protected void passUp(byte[] PDU) throws ErreurTransmissionExeption {
         coucheSuivante.receiveFromDown(PDU);
     }
 
