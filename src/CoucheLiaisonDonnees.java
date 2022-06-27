@@ -15,7 +15,7 @@ public class CoucheLiaisonDonnees extends Couche{
 
     }
     static public CoucheLiaisonDonnees getInstance(){
-        ecrireLog("Get instace Couche liaison de donnees")
+        ecrireLog("Get instace Couche liaison de donnees");
         if(instance == null){
             instance = new CoucheLiaisonDonnees();
         }
@@ -34,7 +34,7 @@ public class CoucheLiaisonDonnees extends Couche{
     }
 
     @Override
-    protected void receiveFromUp(byte[] PDU) {
+    protected void receiveFromDown(byte[] PDU) {
         ecrireLog("Reception d'un packet de la couche physique");
         //extraction des datas du PDU
         byte[] paquet = new byte[PDU.length - 4];
@@ -54,11 +54,39 @@ public class CoucheLiaisonDonnees extends Couche{
         // Send PDU to network layer
         packetsRecus++;
         System.out.println("COUCHE DATALINK paquets recus = "+ packetsRecus);
+        ecrireLog("Envoit vers la couche transport");
         passUp(paquet);
+
     }
 
     @Override
-    protected void receiveFromDown(byte[] PDU) {
+    protected void receiveFromUp(byte[] PDU) {
+        ecrireLog("Reception de la couche transport");
+
+        // Allocate new PDU
+        byte[] trame = new byte[PDU.length + 4];
+
+        // Calculate CRC using polynomial 0x82608EDB (default)
+        CRC32 crc = new CRC32();
+        crc.update(PDU);
+        long crcValue = crc.getValue();
+        System.out.println("CRCVALUE = "+crcValue);
+        byte[] CRCBytes = new byte[] {
+                (byte) (crcValue >> 24),
+                (byte) (crcValue >> 16),
+                (byte) (crcValue >> 8),
+                (byte) crcValue};
+
+        arraycopy(CRCBytes, 0, trame, 0, CRCBytes.length);
+
+
+        // Copie le  PDU dans la  trame
+        arraycopy(PDU, 0, trame, 4, PDU.length);
+
+
+        packetsTransmis++;
+        ecrireLog("Envoit vers la couches physique (Sockets)");
+        passDown(trame);
 
     }
 }
