@@ -67,10 +67,10 @@ private final char CODE_DEBUT = 'd';
                     code = CODE_FIN;
                 }
 
-                // Copy data size as ASCII in header
-                TPDU[i][0] = (byte) code;       // Assuming sizeof(char) == sizeof(byte)
+
+                TPDU[i][0] = (byte) code;
                 arraycopy(convertIntToASCII(i, 8), 0, TPDU[i], SEQ_HEADER_POS, 8); // SEQUENCE
-                arraycopy(convertIntToASCII(taille, 3), 0, TPDU[i], SIZE_HEADER_POS, 3); // SIZE
+                arraycopy(convertIntToASCII(taille, 3), 0, TPDU[i], SIZE_HEADER_POS, 3); // taille
 
                 // envoie a la couche inferieure
                 passDown(TPDU[i]);
