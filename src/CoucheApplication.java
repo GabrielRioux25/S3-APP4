@@ -66,7 +66,7 @@ public class CoucheApplication extends Couche {
                 System.out.println("le fichier existe deja.");
             }
             try (FileOutputStream fos = new FileOutputStream(file.getPath())) {
-                System.out.println("test");
+
                 fos.write(data_bytes);
 
             }
