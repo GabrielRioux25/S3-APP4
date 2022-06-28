@@ -56,7 +56,7 @@ private final char CODE_DEBUT = 'd';
     @Override
     protected void receiveFromUp(byte[] PDU) {
             int count = (int) Math.ceil((double) PDU.length / SIZE);
-            System.out.println("Count= " +count);
+            System.out.println("COUCHE TRANSPORT: Divison en  = " +count);
             TPDU = new byte[count][200];
 
             // Division of PDU for size of 200 each & end send to Layer
@@ -66,7 +66,13 @@ private final char CODE_DEBUT = 'd';
                     taille = PDU.length % SIZE; //taille de chaque paquet
                 }
 
+
                 arraycopy(PDU, i * SIZE, TPDU[i], TAILLE_HEADER, taille);
+
+
+
+
+
                 //System.out.println("i = "+i+  ", taille = "+taille);
 
 

@@ -55,7 +55,7 @@ public class CoucheLiaisonDonnees extends Couche{
     protected void receiveFromDown(byte[] PDU) throws ErreurTransmissionExeption {
 
 
-        ecrireLog("Reception d'un packet de la couche physique");
+        ecrireLog("Reception d'un packet de la couche physique (Scokets de berkeley)");
         //extraction des datas du PDU
         byte[] paquet = new byte[PDU.length - 4];
         arraycopy(PDU, 4, paquet, 0, paquet.length);
@@ -67,7 +67,8 @@ public class CoucheLiaisonDonnees extends Couche{
         int oldCRC = (((int) PDU[0] << 24) & 0xFF000000) | (((int) PDU[1] << 16) & 0x00FF0000) | (((int) PDU[2] << 8) & 0x0000FF00) | ((int) PDU[3] & 0x000000FF);
 
         if (crcValue != oldCRC) {  // Error in CRC
-            System.out.println("Error CRC32");
+            System.out.println("Erreur CRC32");
+            ecrireLog("Erreur de CRC ");
             erreursCRC++;
             return; //abandonne le paquet
         }
@@ -103,6 +104,7 @@ public class CoucheLiaisonDonnees extends Couche{
                 (byte) (crcValue >> 8),
                 (byte) crcValue};
 
+        //les 4 premiers bits de la trame sont les vieux crc.
         arraycopy(CRCBytes, 0, trame, 0, CRCBytes.length);
 
 
