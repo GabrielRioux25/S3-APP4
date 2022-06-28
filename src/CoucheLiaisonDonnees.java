@@ -26,7 +26,7 @@ public class CoucheLiaisonDonnees extends Couche{
         Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
         try {
             FileWriter fileWriter = new FileWriter("liaisonDeDonnees.log",true);
-            fileWriter.write("Operation: "+operation + "yyyy-mm-dd hh:mm:ss:mmm: " + currentTimestamp);
+            fileWriter.write("Operation: "+operation + "yyyy-mm-dd hh:mm:ss:mmm: " + currentTimestamp+ "\n");
             fileWriter.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -35,6 +35,8 @@ public class CoucheLiaisonDonnees extends Couche{
 
     @Override
     protected void receiveFromDown(byte[] PDU) throws ErreurTransmissionExeption {
+
+
         ecrireLog("Reception d'un packet de la couche physique");
         //extraction des datas du PDU
         byte[] paquet = new byte[PDU.length - 4];
@@ -52,9 +54,9 @@ public class CoucheLiaisonDonnees extends Couche{
             return; //abandonne le paquet
         }
 
-        // Send PDU to network layer
+
         packetsRecus++;
-        System.out.println("COUCHE DATALINK paquets recus = "+ packetsRecus);
+
         ecrireLog("Envoit vers la couche transport");
         passUp(paquet);
 
@@ -62,6 +64,7 @@ public class CoucheLiaisonDonnees extends Couche{
 
     @Override
     protected void receiveFromUp(byte[] PDU) {
+
         ecrireLog("Reception de la couche transport");
 
         // Allocate new PDU
@@ -71,7 +74,7 @@ public class CoucheLiaisonDonnees extends Couche{
         CRC32 crc = new CRC32();
         crc.update(PDU);
         long crcValue = crc.getValue();
-        System.out.println("CRCVALUE = "+crcValue);
+        //System.out.println("CRCVALUE = "+crcValue);
         byte[] CRCBytes = new byte[] {
                 (byte) (crcValue >> 24),
                 (byte) (crcValue >> 16),
@@ -88,6 +91,7 @@ public class CoucheLiaisonDonnees extends Couche{
         packetsTransmis++;
         ecrireLog("Envoit vers la couches physique (Sockets)");
         passDown(trame);
+
 
     }
 }

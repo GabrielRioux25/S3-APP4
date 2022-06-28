@@ -3,9 +3,8 @@
  *
  *    Aplication
  *    Transport
- *    Reseau
  *    Liaison de donnees
- *    Physical
+ *    Physical(sockets de berkeley)
  *
  * DEUX CHEMINS POSSIBLEs
  * Soit on part De l'application, on se rend vers la couche physique (VERS LE BAS)
@@ -15,8 +14,8 @@
 
 
 public abstract class Couche {
-    private Couche coucheSuivante;
-    private Couche couchePrecedente;
+    private Couche coucheSuperieure;
+    private Couche coucheInferieure;
 
     protected abstract void receiveFromUp(byte[] PDU);
 
@@ -24,21 +23,21 @@ public abstract class Couche {
 
     //pour le modele chaine de responsabilités
     protected void passUp(byte[] PDU) throws ErreurTransmissionExeption {
-        coucheSuivante.receiveFromDown(PDU);
+        coucheSuperieure.receiveFromDown(PDU);
     }
 
     protected  void passDown(byte[] PDU){
-        couchePrecedente.receiveFromUp(PDU);
+        coucheInferieure.receiveFromUp(PDU);
     }
 
     //setup des couches precedentes et suivantes de chaque couches
 
-    public void setCoucheSuivante(Couche suivante){
-        this.coucheSuivante = suivante;
+    public void setCoucheInferieure(Couche inferieure){
+        coucheInferieure = inferieure;
 
     }
-    public void setCouchePrecedente(Couche precedente){
-        this.couchePrecedente = precedente;
+    public void setCoucheSuperieure(Couche Superieure){
+        coucheSuperieure = Superieure;
     }
 
 

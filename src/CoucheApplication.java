@@ -42,21 +42,21 @@ public class CoucheApplication extends Couche {
         byte[] data_bytes = Arrays.copyOfRange(PDU, 188,PDU.length);
         try {
             String filePath = new File("").getAbsolutePath();
-            File file = new File(filePath + "/dest/" + nomFichier);
+            File file = new File(filePath + "/destination/" + nomFichier);
             if(file.exists())
                 file.delete();
             if (file.createNewFile()) {
-                System.out.println("File created: " + file.getName());
+                System.out.println("File cree: " + file.getName());
             } else {
-                System.out.println("File already exists.");
+                System.out.println("le fichier existe deja.");
             }
             try (FileOutputStream fos = new FileOutputStream(file.getPath())) {
-                System.out.println("Writing stream.");
+                System.out.println("test");
                 fos.write(data_bytes);
-                System.out.println("Done writing.");
+
             }
         } catch (Exception e) {
-            System.out.println("An error occurred.");
+
             e.printStackTrace();
         }
 

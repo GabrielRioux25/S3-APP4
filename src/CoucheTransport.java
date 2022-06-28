@@ -24,7 +24,7 @@ private final char CODE_DEBUT = 'd';
     private final int SIZE_HEADER_POS = 9;
     private final int SEQ_HEADER_POS = 1;
 
-    private int errors;
+    private int errors =0;
     private int sequenceFin = -1;
     private byte[][] TPDU;
     private Map<Integer, byte[]> receiveBuffer;
@@ -80,6 +80,7 @@ private final char CODE_DEBUT = 'd';
 
     @Override
     protected void receiveFromDown(byte[] PDU) throws ErreurTransmissionExeption {
+
         byte[] seq_bytes = Arrays.copyOfRange(PDU, SEQ_HEADER_POS, SIZE_HEADER_POS);
         byte[] size_bytes = Arrays.copyOfRange(PDU, SIZE_HEADER_POS, TAILLE_HEADER );
         char code = (char) PDU[0];
@@ -87,6 +88,7 @@ private final char CODE_DEBUT = 'd';
         int size = convertAsciiToInt(size_bytes);
         //System.out.println("RECEPTION DE LA COUCHE DATA/LINK : SEQ = "+ seq +"Taille= "+size);
         byte[] data_bytes = Arrays.copyOfRange(PDU, TAILLE_HEADER , TAILLE_HEADER + size);
+
         if ( code == CODE_DEBUT){
             //debut de la communication, reset le buffer de reception
             receiveBuffer = new HashMap<>();
@@ -95,29 +97,32 @@ private final char CODE_DEBUT = 'd';
         else if (code == CODE_FIN) {
             sequenceFin = seq;
             savePDU(seq, data_bytes);
+
         }
         else if (code == CODE_NORMAL) {
             savePDU(seq,data_bytes);
         }
         else if (code == CODE_RESEND) {
+            System.out.println("DSFDSFDSFSDF");
             errors ++;
-            System.out.println("Renvoit du packet");
+            System.out.println("Renvoit du packet: " +errors);
             passDown(TPDU[seq]);
         }
 
+        if(sequenceFin != -1) {
 
-        System.out.println("size " + receiveBuffer.size() + " end sequence " + sequenceFin);
-        if(receiveBuffer.size() <= sequenceFin)
-            return;
-        int arrayL = (receiveBuffer.size() - 1) * SIZE + receiveBuffer.get(sequenceFin).length;
-        byte[] passUpBuffer = new byte[arrayL];
-        int count = 0;
-        for (Map.Entry<Integer, byte[]> key_value : receiveBuffer.entrySet()) {
-            arraycopy(key_value.getValue(), 0, passUpBuffer, count, key_value.getValue().length);
-            count += key_value.getValue().length;
+            if (receiveBuffer.size() <= sequenceFin)
+                return;
+            int arrayL = (receiveBuffer.size() - 1) * SIZE + receiveBuffer.get(sequenceFin).length;
+            byte[] passUpBuffer = new byte[arrayL];
+            int count = 0;
+            for (Map.Entry<Integer, byte[]> key_value : receiveBuffer.entrySet()) {
+                arraycopy(key_value.getValue(), 0, passUpBuffer, count, key_value.getValue().length);
+                count += key_value.getValue().length;
+            }
+            System.out.println("EREURS:" + errors);
+            passUp(passUpBuffer);
         }
-        System.out.println("ERRRORSSSS:" + errors);
-        passUp(passUpBuffer);
 
     }
 
@@ -148,15 +153,17 @@ private final char CODE_DEBUT = 'd';
     private void savePDU(int seq, byte[] data_bytes) throws ErreurTransmissionExeption {
         if (seq != 0 && receiveBuffer.get(seq - 1) == null) {
             errors++;
+            System.out.println("Ajout d'une erreur");
             if(errors >= 3) {
-                // TODO: throw error
-                throw new ErreurTransmissionExeption("More then 3 error connection will be lost.");
+
+                throw new ErreurTransmissionExeption("3 erreurs, connexion perdu");
             }
             byte[] rPDU = createResendPDU(seq - 1);
             passDown(rPDU);
         }
         if (receiveBuffer.get(seq) != null)
             return;
+
         receiveBuffer.put(seq, data_bytes);
         byte[] ackPDU = createAckPDU(seq);
         passDown(ackPDU);
