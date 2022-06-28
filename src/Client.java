@@ -1,6 +1,12 @@
 import java.io.IOException;
 
 public class Client {
+    /**
+     *
+     * @param args
+     * @throws IOException
+     * @throws InterruptedException
+     */
     public static void main(String[] args) throws IOException, InterruptedException {
         CoucheApplication coucheApplication;
         CoucheTransport coucheTransport;

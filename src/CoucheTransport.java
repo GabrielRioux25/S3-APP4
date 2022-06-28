@@ -30,11 +30,18 @@ private final char CODE_DEBUT = 'd';
     private Map<Integer, byte[]> receiveBuffer;
 
     private static CoucheTransport instance;
+
+    /**
+     *
+     */
     private CoucheTransport(){
 
     }
 
-
+    /**
+     *
+     * @return
+     */
     public static CoucheTransport getInstance() {
         if(instance == null){
             instance = new CoucheTransport();
@@ -42,6 +49,10 @@ private final char CODE_DEBUT = 'd';
         return instance;
     }
 
+    /**
+     *
+     * @param PDU
+     */
     @Override
     protected void receiveFromUp(byte[] PDU) {
             int count = (int) Math.ceil((double) PDU.length / SIZE);
@@ -78,6 +89,11 @@ private final char CODE_DEBUT = 'd';
             System.out.println("COUCHE TRANSPORT: FIN DE LA TRANSMISSION DE DONNEES");
     }
 
+    /**
+     *
+     * @param PDU
+     * @throws ErreurTransmissionExeption
+     */
     @Override
     protected void receiveFromDown(byte[] PDU) throws ErreurTransmissionExeption {
 
@@ -126,7 +142,12 @@ private final char CODE_DEBUT = 'd';
 
     }
 
-
+    /**
+     *
+     * @param data
+     * @param size
+     * @return
+     */
     private byte[] convertIntToASCII(int data, int size) {
         String converted = Integer.toString(data);
         byte[] converted2 = converted.getBytes(StandardCharsets.US_ASCII);
@@ -139,17 +160,34 @@ private final char CODE_DEBUT = 'd';
         return newData;
     }
 
+    /**
+     *
+     * @param data
+     * @return
+     */
     private int convertAsciiToInt(byte[] data) {
         String data_string = new String(data);
         return Integer.parseInt(removeLeadingZeros(data_string));
     }
 
+    /**
+     *
+     * @param str
+     * @return
+     */
     private String removeLeadingZeros(String str) {
         String regex = "^0+(?!$)";
         str = str.replaceAll(regex, "");
 
         return str;
     }
+
+    /**
+     *
+     * @param seq
+     * @param data_bytes
+     * @throws ErreurTransmissionExeption
+     */
     private void savePDU(int seq, byte[] data_bytes) throws ErreurTransmissionExeption {
         if (seq != 0 && receiveBuffer.get(seq - 1) == null) {
             errors++;
@@ -169,6 +207,11 @@ private final char CODE_DEBUT = 'd';
         passDown(ackPDU);
     }
 
+    /**
+     *
+     * @param seq
+     * @return
+     */
     private byte[] createResendPDU(int seq) {
         int taille = 0;
         byte[] resendPDU = new byte[200];
@@ -182,6 +225,11 @@ private final char CODE_DEBUT = 'd';
         return resendPDU;
     }
 
+    /**
+     *
+     * @param seq
+     * @return
+     */
     private byte[] createAckPDU(int seq) {
         byte[] ackPDU = new byte[200];
 

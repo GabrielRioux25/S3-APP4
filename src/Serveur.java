@@ -1,6 +1,12 @@
 import java.io.IOException;
 
 public class Serveur {
+
+    /**
+     *
+     * @param args
+     * @throws IOException
+     */
     public static void main(String[] args) throws IOException {
         CoucheTransport coucheTransport;
          CoucheLiaisonDonnees coucheLiaisonDonnees;

@@ -11,9 +11,18 @@ public class CoucheLiaisonDonnees extends Couche{
     private int packetsRecus =0;
     private int packetsTransmis = 0;
     private static CoucheLiaisonDonnees instance;
+
+    /**
+     *
+     */
     private CoucheLiaisonDonnees(){
 
     }
+
+    /**
+     *
+     * @return
+     */
     static public CoucheLiaisonDonnees getInstance(){
         ecrireLog("Get instace Couche liaison de donnees");
         if(instance == null){
@@ -22,6 +31,10 @@ public class CoucheLiaisonDonnees extends Couche{
         return instance;
     }
 
+    /**
+     *
+     * @param operation
+     */
     public static void ecrireLog(String operation) {
         Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
         try {
@@ -33,6 +46,11 @@ public class CoucheLiaisonDonnees extends Couche{
         }
     }
 
+    /**
+     *
+     * @param PDU
+     * @throws ErreurTransmissionExeption
+     */
     @Override
     protected void receiveFromDown(byte[] PDU) throws ErreurTransmissionExeption {
 
@@ -62,6 +80,10 @@ public class CoucheLiaisonDonnees extends Couche{
 
     }
 
+    /**
+     *
+     * @param PDU
+     */
     @Override
     protected void receiveFromUp(byte[] PDU) {
 
@@ -91,7 +113,5 @@ public class CoucheLiaisonDonnees extends Couche{
         packetsTransmis++;
         ecrireLog("Envoit vers la couches physique (Sockets)");
         passDown(trame);
-
-
     }
 }

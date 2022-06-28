@@ -14,10 +14,18 @@ public class CoucheApplication extends Couche {
 
 
     //constructeur prive
+
+    /**
+     *
+     */
     private CoucheApplication(){
 
     }
 
+    /**
+     *
+     * @return
+     */
     public static CoucheApplication getInstance() {
         if (instance == null){
             instance = new CoucheApplication();
@@ -25,12 +33,19 @@ public class CoucheApplication extends Couche {
         return instance;
     }
 
+    /**
+     *
+     * @param PDU
+     */
     @Override
     protected void receiveFromUp(byte[] PDU) {
         // pas besoin, Couche la plus haute du modele OSI
     }
 
-
+    /**
+     *
+     * @param PDU
+     */
     //Recoit les packets de la couches Inferieure (Transport). Puis cree un nouveau fichier et dompe les data des packets dans ce fichiers.
     @Override
     protected void receiveFromDown(byte[] PDU) {
@@ -64,6 +79,12 @@ public class CoucheApplication extends Couche {
 
     //envoit le fichier a la couche transport
 
+    /**
+     *
+     * @param file
+     * @throws IOException
+     * @throws InterruptedException
+     */
     public void sendFile(String file) throws IOException, InterruptedException {
         File file2 = new File(file);
         byte[] APDU;

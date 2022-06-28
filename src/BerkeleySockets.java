@@ -13,16 +13,32 @@ public class BerkeleySockets extends Couche {
 
     // Singleton
     private static BerkeleySockets instance;
+
+    /**
+     *
+     */
     private BerkeleySockets(){}
+
+    /**
+     *
+     * @return
+     */
     static public BerkeleySockets getInstance() {
         return instance == null ? new BerkeleySockets() : instance;
     }
 
+    /**
+     *
+     * @param i
+     */
     public static void setErreurShiftBit(int i) {
         ErreurBitShift = i;
     }
 
-
+    /**
+     *
+     * @param address
+     */
     public void setDestAddress(String address) {
         try {
             this.address = InetAddress.getByName(address);
@@ -32,30 +48,42 @@ public class BerkeleySockets extends Couche {
     }
 
 
-
-
+    /**
+     *
+     * @param port
+     */
     public void setDestPort(int port) {
         this.port = port;
     }
 
-
+    /**
+     *
+     */
     public void start() {
         thread.running = true;
         thread.start();
     }
 
-
+    /**
+     *
+     */
     public void stop() {
         thread.running = false;
         thread.stop();
     }
 
-
+    /**
+     *
+     * @return
+     */
     public boolean threadRunnint() {
         return thread.running;
     }
 
-
+    /**
+     *
+     * @param PDU
+     */
     @Override
     protected void receiveFromUp(byte[] PDU) {
         // get a datagram socket
@@ -82,20 +110,30 @@ public class BerkeleySockets extends Couche {
         }
     }
 
-
+    /**
+     *
+     * @param PDU
+     * @throws ErreurTransmissionExeption
+     */
     @Override
     public void receiveFromDown(byte[] PDU) throws  ErreurTransmissionExeption {
 
         passUp(PDU);
     }
 
-
+    /**
+     *
+     * @param port
+     * @throws IOException
+     */
     public void createReceptionThread(int port) throws IOException {
         this.thread = new ReceptionThread(port, this);
     }
 
 
-
+    /**
+     *
+     */
     private class ReceptionThread extends Thread{
         protected DatagramSocket socket = null;
         private BerkeleySockets parent;
@@ -108,7 +146,9 @@ public class BerkeleySockets extends Couche {
         }
 
 
-
+        /**
+         *
+         */
         public void run() {
             while (running) {
                 try {
