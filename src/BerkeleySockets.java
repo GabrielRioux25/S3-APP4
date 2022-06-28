@@ -82,27 +82,20 @@ public class BerkeleySockets extends Couche {
         }
     }
 
-    /**
-     * Transmits received paquet to the DataLink Layer.
-     */
+
     @Override
     public void receiveFromDown(byte[] PDU) throws  ErreurTransmissionExeption {
 
         passUp(PDU);
     }
 
-    /**
-     * Create a reception thread on the selected port.
-     */
+
     public void createReceptionThread(int port) throws IOException {
         this.thread = new ReceptionThread(port, this);
     }
 
 
-    /**
-     * Simple thread listening to a reception socket and passing its data to
-     * the Physical Layer to be retransmitted to the DataLink Layer.
-     */
+
     private class ReceptionThread extends Thread{
         protected DatagramSocket socket = null;
         private BerkeleySockets parent;

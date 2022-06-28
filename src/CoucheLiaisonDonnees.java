@@ -67,10 +67,10 @@ public class CoucheLiaisonDonnees extends Couche{
 
         ecrireLog("Reception de la couche transport");
 
-        // Allocate new PDU
+        // nouveau pdu
         byte[] trame = new byte[PDU.length + 4];
 
-        // Calculate CRC using polynomial 0x82608EDB (default)
+        // Calcul du  CRC utilisant le polynome 0x82608EDB (default)
         CRC32 crc = new CRC32();
         crc.update(PDU);
         long crcValue = crc.getValue();

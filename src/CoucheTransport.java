@@ -103,7 +103,7 @@ private final char CODE_DEBUT = 'd';
             savePDU(seq,data_bytes);
         }
         else if (code == CODE_RESEND) {
-            System.out.println("DSFDSFDSFSDF");
+
             errors ++;
             System.out.println("Renvoit du packet: " +errors);
             passDown(TPDU[seq]);
