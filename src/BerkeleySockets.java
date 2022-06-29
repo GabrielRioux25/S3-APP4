@@ -7,7 +7,7 @@ public class BerkeleySockets extends Couche {
     InetAddress address = null;
     int port = 0;
     protected ReceptionThread thread;
-    public int delay = 0;
+    public int delay = 3;
     public static int ErreurBitShift = -1;
     public int packetSent = 0;
 
